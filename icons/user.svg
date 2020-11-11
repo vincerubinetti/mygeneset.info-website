@@ -1,0 +1,20 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="-50 -50 100 100"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="10"
+  stroke-linecap="round"
+>
+  <circle cx="0" cy="-25" r="20" />
+  <path
+    d="
+      M -40 45
+      v -15
+      a 15 15 0 0 1 15 -15
+      h 50
+      a 15 15 0 0 1 15 15
+      v 15
+    "
+  />
+</svg>
