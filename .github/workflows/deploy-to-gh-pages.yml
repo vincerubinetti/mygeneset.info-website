@@ -1,0 +1,26 @@
+name: gh-pages-ci
+
+on: [push]
+
+env:
+  CI: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v1
+      - name: set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: install and build
+        run: |
+          yarn install
+          yarn build
+      - name: deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
