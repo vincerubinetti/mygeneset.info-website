@@ -11,10 +11,10 @@
 import { defineComponent } from "vue";
 import Link from "@/components/Link.vue";
 
-export default defineComponent({
-  props: ["to", "text", "icon"],
-  components: { Link }
-});
+const props = ["to", "text", "icon"];
+const components = { Link };
+
+export default defineComponent({ props, components });
 </script>
 
 <style scope lang="scss">

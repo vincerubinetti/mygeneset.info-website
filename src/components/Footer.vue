@@ -12,14 +12,15 @@ import QuickLinks from "@/components/QuickLinks.vue";
 import InfoLinks from "@/components/InfoLinks.vue";
 import Copyright from "@/components/Copyright.vue";
 
-export default defineComponent({
-  props: ["big"],
-  components: {
-    QuickLinks,
-    InfoLinks,
-    Copyright
-  }
-});
+const props = ["big"];
+
+const components = {
+  QuickLinks,
+  InfoLinks,
+  Copyright
+};
+
+export default defineComponent({ props, components });
 </script>
 
 <style scoped lang="scss">

@@ -17,10 +17,10 @@
 import { defineComponent } from "vue";
 import { isExternalLink } from "@/util/string";
 
-export default defineComponent({
-  props: ["to", "text", "icon"],
-  methods: { isExternalLink }
-});
+const props = ["to", "text", "icon"];
+const methods = { isExternalLink };
+
+export default defineComponent({ props, methods });
 </script>
 
 <style scope lang="scss">

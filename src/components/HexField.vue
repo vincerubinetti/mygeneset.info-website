@@ -56,15 +56,8 @@ const rows = Math.min(Math.round(window.innerHeight / 2 / d) + 2, 5);
 const xAngle = ref(0);
 const yAngle = ref(0);
 
-const onMouseMove = (event: MouseEvent) => {
-  yAngle.value = -(0.5 - event.clientX / window.innerWidth) * 30;
-  xAngle.value = (0.5 - event.clientY / window.innerHeight) * 30;
-};
-
-const created = () => window.addEventListener("mousemove", onMouseMove);
-
+// generate hex grid of cells
 const cells: { x: number; y: number; z: number; strength: number }[] = [];
-
 for (let x = -cols; x <= cols; x++)
   for (let y = -rows; y <= rows; y++) {
     const offset = y % 2 === 0;
@@ -79,12 +72,19 @@ for (let x = -cols; x <= cols; x++)
       });
   }
 
+// change view angle on mouse move
+const onMouseMove = (event: MouseEvent) => {
+  yAngle.value = -(0.5 - event.clientX / window.innerWidth) * 30;
+  xAngle.value = (0.5 - event.clientY / window.innerHeight) * 30;
+};
+
+// listen for mouse move
+const mounted = () => window.addEventListener("mousemove", onMouseMove);
+const unmounted = () => window.removeEventListener("mousemove", onMouseMove);
+
 const data = () => ({ cells, xAngle, yAngle });
 
-export default defineComponent({
-  created,
-  data
-});
+export default defineComponent({ mounted, unmounted, data });
 </script>
 
 <style scoped lang="scss">

@@ -9,7 +9,9 @@
 import { defineComponent } from "vue";
 import Link from "@/components/Link.vue";
 
-export default defineComponent({ components: { Link } });
+const components = { Link };
+
+export default defineComponent({ components });
 </script>
 
 <style scoped lang="scss">

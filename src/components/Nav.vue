@@ -12,11 +12,9 @@
 import { defineComponent } from "vue";
 import HeaderLink from "@/components/HeaderLink.vue";
 
-export default defineComponent({
-  components: {
-    HeaderLink
-  }
-});
+const components = { HeaderLink };
+
+export default defineComponent({ components });
 </script>
 
 <style scoped lang="scss">

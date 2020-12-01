@@ -15,28 +15,32 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { ref } from "vue";
 import HexField from "@/components/HexField.vue";
 import Nav from "@/components/Nav.vue";
 import Logo from "@/components/Logo.vue";
 import Account from "@/components/Account.vue";
 
-export default defineComponent({
-  props: ["big"],
-  components: {
-    HexField,
-    Nav,
-    Logo,
-    Account
-  },
-  data() {
-    return { expanded: false };
-  },
-  methods: {
-    toggle() {
-      this.expanded = !this.expanded;
-    }
+const expanded = ref(false);
+
+const props = ["big"];
+
+const components = {
+  HexField,
+  Nav,
+  Logo,
+  Account
+};
+
+const data = () => ({ expanded });
+
+const methods = {
+  toggle: () => {
+    expanded.value = !expanded.value;
   }
-});
+};
+
+export default defineComponent({ props, components, data, methods });
 </script>
 
 <style scoped lang="scss">
