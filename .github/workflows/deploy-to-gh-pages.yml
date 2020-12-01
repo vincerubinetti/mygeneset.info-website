@@ -6,21 +6,23 @@ env:
   CI: false
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v1
-      - name: set up node
+      - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
-      - name: install and build
-        run: |
-          yarn install
-          yarn build
-      - name: deploy to gh-pages
+          node-version: '12.x'
+      - name: Install packages
+        run: yarn install
+      - name: Build app
+        run: yarn build
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          keep_files: false
           publish_dir: ./dist
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
