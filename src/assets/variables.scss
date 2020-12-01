@@ -1,0 +1,40 @@
+// colors
+$accent-light: #caf0f8;
+$accent: #81d4fa;
+$accent-dark: #0288d1;
+$red: #ef5350;
+$yellow: #ffc107;
+$white: #ffffff;
+$off-white: #f8f8f8;
+$light-gray: #c0c0c0;
+$gray: #808080;
+$dark-gray: #404040;
+$black: #000000;
+
+// fonts
+$sans: "Jost", sans-serif;
+$mono: "Inconsolata", monospace;
+$bold: 700;
+$semi-bold: 600;
+$medium: 500;
+
+// transition:
+$fast: 0.25s ease;
+$slow: 1s ease;
+
+// screen sizes
+$tablet: 900px;
+$phone: 600px;
+
+// mixins
+@mixin trim-margins {
+  &:first-child {
+    margin-top: 0;
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+}

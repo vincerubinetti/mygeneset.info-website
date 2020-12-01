@@ -1,8 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-35 -35 70 70">
   <style>
-    .background {
-      fill: #caf0f8;
-    }
     .shadow {
       fill: #00000010;
       animation: shadow 4s cubic-bezier(0.5, 0, 0.5, 1) forwards infinite;
@@ -159,8 +156,6 @@
       animation-delay: 1s;
     }
   </style>
-
-  <circle class="background" cx="0" cy="0" r="50" />
 
   <ellipse class="shadow" cx="0" cy="30" rx="20" ry="5" />
 
