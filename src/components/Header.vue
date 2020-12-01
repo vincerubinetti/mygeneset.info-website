@@ -1,5 +1,6 @@
 <template>
   <header v-bind:big="big">
+    <HexField />
     <button @click="toggle">
       <i v-if="expanded" class="fas fa-angle-double-up"></i>
       <i v-else class="fas fa-bars"></i>
@@ -8,22 +9,24 @@
     </button>
     <Nav v-bind:expanded="expanded" />
     <Logo v-bind:big="big" />
-    <Profile v-bind:expanded="expanded" />
+    <Account v-bind:expanded="expanded" />
   </header>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import HexField from "@/components/HexField.vue";
 import Nav from "@/components/Nav.vue";
 import Logo from "@/components/Logo.vue";
-import Profile from "@/components/Profile.vue";
+import Account from "@/components/Account.vue";
 
 export default defineComponent({
   props: ["big"],
   components: {
+    HexField,
     Nav,
     Logo,
-    Profile
+    Account
   },
   data() {
     return { expanded: false };
@@ -45,10 +48,12 @@ header {
   flex-wrap: wrap;
   padding: 20px;
   background: $accent-light;
+  overflow: hidden;
 
   & > * {
     flex-basis: 0;
     flex-grow: 1;
+    z-index: 1;
   }
 }
 

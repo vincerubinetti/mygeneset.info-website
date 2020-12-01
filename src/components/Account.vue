@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="account">
     <HeaderLink to="/login" text="Log In" icon="fas fa-sign-in-alt" />
     <HeaderLink to="/signup" text="Sign Up" />
   </div>
@@ -15,7 +15,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.profile {
+.account {
   display: flex;
   justify-content: flex-end;
   align-items: center;

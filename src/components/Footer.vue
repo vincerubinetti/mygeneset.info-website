@@ -1,23 +1,23 @@
 <template>
   <footer>
-    <FooterLeft />
-    <FooterCenter />
-    <FooterRight />
+    <QuickLinks />
+    <InfoLinks />
+    <Copyright />
   </footer>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FooterLeft from "@/components/FooterLeft.vue";
-import FooterCenter from "@/components/FooterCenter.vue";
-import FooterRight from "@/components/FooterRight.vue";
+import QuickLinks from "@/components/QuickLinks.vue";
+import InfoLinks from "@/components/InfoLinks.vue";
+import Copyright from "@/components/Copyright.vue";
 
 export default defineComponent({
   props: ["big"],
   components: {
-    FooterLeft,
-    FooterCenter,
-    FooterRight
+    QuickLinks,
+    InfoLinks,
+    Copyright
   }
 });
 </script>
@@ -35,6 +35,16 @@ footer {
   & > * {
     flex-basis: 0;
     flex-grow: 1;
+  }
+
+  @media (max-width: $phone) {
+    flex-direction: column;
+
+    & > * {
+      text-align: center;
+      margin: 5px 0;
+      @include trim-margins;
+    }
   }
 }
 </style>

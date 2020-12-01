@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="info_links">
     <Link to="about#terms" text="Terms of Use" /> |
     <Link to="about#cite" text="How to Cite" />
   </div>
@@ -13,7 +13,7 @@ export default defineComponent({ components: { Link } });
 </script>
 
 <style scoped lang="scss">
-.container {
+.info_links {
   text-align: center;
 }
 </style>

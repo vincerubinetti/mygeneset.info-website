@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="quick_links">
     <Link to="https://github.com/" icon="fab fa-github fa-fw" />
     <Link to="https://twitter.com/" icon="fab fa-twitter fa-fw" />
     <Link to="https://google.com/" icon="fab fa-google fa-fw" />
@@ -16,7 +16,7 @@ export default defineComponent({ components: { Link } });
 </script>
 
 <style scoped lang="scss">
-.container {
+.quick_links {
   text-align: left;
 
   & > * {
