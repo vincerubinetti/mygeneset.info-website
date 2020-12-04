@@ -1,0 +1,46 @@
+<template>
+  <div class="feature">
+    <div class="feature_icon"><i v-bind:class="icon" /></div>
+    <div class="feature_title">{{ title }}</div>
+    <div class="feature_description">{{ description }}</div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  props: {
+    icon: String,
+    title: String,
+    description: String
+  }
+});
+</script>
+
+<style scoped lang="scss">
+.feature {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+
+  & > * {
+    display: flex;
+  }
+
+  .feature_icon {
+    color: $accent-dark;
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .feature_title {
+    font-weight: $medium;
+    margin-bottom: 5px;
+  }
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
   <LinkTo v-bind:to="link" class="portrait">
-    <img v-bind:src="image" />
-    <span>{{ name }}</span>
-    <span>{{ role }}</span>
+    <div class="portrait_image"><img v-bind:src="image" /></div>
+    <div class="portrait_name">{{ name }}</div>
+    <div class="portrait_role">{{ role }}</div>
   </LinkTo>
 </template>
 
@@ -32,16 +32,29 @@ export default defineComponent({
   width: 100%;
   text-align: center;
   text-decoration: none;
+  color: $black;
 
-  span:first-of-type {
-    font-weight: $medium;
-    margin-top: 10px;
+  & > * {
+    display: flex;
   }
 
-  img {
-    width: 150px;
-    height: 150px;
-    border-radius: 75px;
+  .portrait_image {
+    margin-bottom: 15px;
+
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 75px;
+    }
+  }
+
+  .portrait_name {
+    font-weight: $medium;
+    margin-bottom: 3px;
+  }
+
+  &:hover {
+    color: $accent-dark;
   }
 }
 </style>
