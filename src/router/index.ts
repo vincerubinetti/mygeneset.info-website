@@ -14,7 +14,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    beforeEnter: (to, from, next) => {
+      if (sessionStorage.redirect) {
+        console.log({ redirect: sessionStorage.redirect });
+
+        next(sessionStorage.redirect);
+        delete sessionStorage.redirect;
+      } else {
+        next();
+      }
+    }
   },
   {
     path: "/browse",
@@ -58,11 +68,9 @@ const router = createRouter({
   routes
 });
 
-const title = "My Geneset";
-
 router.afterEach(to =>
   nextTick(() => {
-    document.title = title + " - " + String(to.name);
+    document.title = process.env.VUE_APP_TITLE + " - " + String(to.name);
     scrollToHash(to.hash);
   })
 );
