@@ -16,10 +16,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Home",
     component: Home,
     beforeEnter: (to, from, next) => {
-      if (sessionStorage.redirect) {
-        console.log({ redirect: sessionStorage.redirect });
-
-        next(sessionStorage.redirect);
+      let redirect = sessionStorage.redirect;
+      if (redirect) {
+        console.log({ redirect });
+        redirect = redirect.replace(process.env.BASE_URL, "");
+        next(redirect);
         delete sessionStorage.redirect;
       } else {
         next();
