@@ -1,6 +1,6 @@
 <template>
   <Section>
-    <h1 id="terms">Terms of Use</h1>
+    <h2 id="terms">Terms of Use</h2>
     <p>
       This resource is intended for purely research purposes. It should not be
       used for emergencies or medical or professional advice.
@@ -113,7 +113,7 @@
     </p>
     <Center>
       <Clickable
-        @click="toggleExpanded"
+        @click="expanded = !expanded"
         v-bind:icon="'fas fa-angle-double-' + (expanded ? 'up' : 'down')"
         v-bind:text="'See ' + (expanded ? 'less' : 'more')"
         design="plain"
@@ -123,13 +123,10 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
 import { defineComponent } from "vue";
 import Section from "@/components/Section.vue";
 import Center from "@/components/Center.vue";
 import Clickable from "@/components/Clickable.vue";
-
-const expanded = ref(false);
 
 export default defineComponent({
   components: {
@@ -138,10 +135,7 @@ export default defineComponent({
     Clickable
   },
   data: () => ({
-    expanded
-  }),
-  methods: {
-    toggleExpanded: () => (expanded.value = !expanded.value)
-  }
+    expanded: false
+  })
 });
 </script>
