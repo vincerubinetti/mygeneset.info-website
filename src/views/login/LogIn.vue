@@ -69,19 +69,16 @@ export default defineComponent({
     TextBox,
     LinkTo
   },
-  data: () => ({
-    withEmail: false
-  })
+  data() {
+    return {
+      withEmail: false
+    };
+  }
 });
 </script>
 
 <style scoped lang="scss">
 .login {
-  text-align: center;
-
-  & > * {
-    width: 250px;
-    max-width: 100%;
-  }
+  width: 250px;
 }
 </style>
