@@ -1,15 +1,14 @@
 <template>
   <Section>
-    <Center :vertical="true" width="250px">
-      <Clickable icon="fas fa-graduation-cap" text="With ORCID" design="big" />
-      <Clickable icon="fab fa-github" text="With GitHub" design="big" />
-      <hr />
+    <h2>New Geneset</h2>
+    <Center>
       <Clickable
-        to="/guest"
-        icon="fas fa-ghost"
-        text="Use as Guest"
+        to="/new"
+        icon="fas fa-tools"
+        text="Start from Scratch"
         design="big"
       />
+      <div>...or find an existing geneset and click "Duplicate"</div>
     </Center>
   </Section>
 </template>
@@ -28,3 +27,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped lang="scss">
+div {
+  width: 100%;
+}
+</style>

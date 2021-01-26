@@ -1,7 +1,7 @@
 <template>
   <Header />
-  <Main title="Sign Up" icon="far fa-user-circle">
-    <SignUp />
+  <Main title="Geneset" icon="fas fa-dna">
+    <GenesetEdit :editable="true" :fresh="true" />
   </Main>
   <Footer />
 </template>
@@ -11,14 +11,14 @@ import { defineComponent } from "vue";
 import Header from "@/components/Header.vue";
 import Main from "@/components/Main.vue";
 import Footer from "@/components/Footer.vue";
-import SignUp from "./signup/SignUp.vue";
+import GenesetEdit from "./GenesetEdit.vue";
 
 export default defineComponent({
   components: {
     Header,
     Main,
     Footer,
-    SignUp
+    GenesetEdit
   }
 });
 </script>

@@ -1,6 +1,7 @@
 <template>
   <Section>
-    <GenesetSearch placeholder="Search all genesets by keywords" />
+    <h2>Your Genesets</h2>
+    <GenesetSearch placeholder="Search your genesets by keyword" />
     <Table :cols="cols" :rows="rows" />
   </Section>
 </template>
@@ -17,7 +18,7 @@ const cols = [
   { key: "number", name: "Number", align: "center" },
   { key: "long_string", name: "Long String Description", align: "left" }
 ];
-const rows = dummyTable(cols, 101);
+const rows = dummyTable(cols, 8);
 
 export default defineComponent({
   components: {

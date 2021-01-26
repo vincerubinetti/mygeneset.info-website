@@ -3,47 +3,71 @@
     <table>
       <thead>
         <tr>
-          <th v-for="(col, index) in cols" :key="index">
-            <button :align="col.align || 'center'" @click="changeSort(index)">
+          <th v-for="(col, colIndex) in cols" :key="colIndex">
+            <button
+              v-if="!col.action"
+              :align="col.align || 'center'"
+              @click="changeSort(col.key)"
+            >
               {{ col.name }}
-              <i v-if="index !== sortCol" class="fas fa-sort"></i>
               <i
-                v-if="index === sortCol"
+                v-if="col.key === sortKey"
                 :class="`fas fa-sort-${sortUp ? 'up' : 'down'}`"
               ></i>
+              <i v-else class="fas fa-sort"></i>
             </button>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in _rows" :key="index">
+        <tr v-for="(row, rowIndex) in _rows" :key="rowIndex">
           <td
-            v-for="(cell, index) in row"
-            :key="index"
-            :align="cols[index]?.align || 'center'"
+            v-for="(col, colIndex) in cols"
+            :key="colIndex"
+            :align="col.align || 'center'"
           >
-            {{ cell }}
+            <Clickable
+              v-if="col.action"
+              :title="col.action"
+              :icon="col.icon"
+              @click="
+                $emit('action', {
+                  rowIndex,
+                  colIndex,
+                  originalIndex: row.originalIndex,
+                  row,
+                  cell: row[col.key]
+                })
+              "
+              design="plain"
+            />
+            <span v-else>
+              {{ row[col.key] }}
+            </span>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <Center>
+  <Center v-if="rows.length">
     <Clickable
       icon="fas fa-chevron-left"
       @click="prevPage"
       design="plain"
       title="Previous page of table rows"
+      :disabled="!canPrev"
     />
-    <span>
-      {{ startRow + 1 }} to {{ startRow + perPage }} of {{ rows.length }}
-    </span>
+    <span>{{ startRow + 1 }} to {{ endRow }} of {{ rows.length }}</span>
     <Clickable
       icon="fas fa-chevron-right"
       @click="nextPage"
       design="plain"
       title="Next page of table rows"
+      :disabled="!canNext"
     />
+  </Center>
+  <Center v-else>
+    No Data
   </Center>
 </template>
 
@@ -52,15 +76,17 @@ import { defineComponent } from "vue";
 import Center from "@/components/Center.vue";
 import Clickable from "@/components/Clickable.vue";
 
-interface Col {
-  name: string;
-  align: string;
+export interface Col {
+  key: string;
+  name?: string;
+  align?: string;
+  component?: string;
 }
 
 type Cell = number | string | null | undefined;
 
 interface Row {
-  [index: number]: Cell;
+  [index: string]: Cell;
 }
 
 export default defineComponent({
@@ -68,59 +94,76 @@ export default defineComponent({
     cols: Array,
     rows: Array
   },
+  emits: ["action"],
   components: {
     Center,
     Clickable
   },
   data() {
     return {
-      sortCol: -1,
+      sortKey: "",
       sortUp: false,
       startRow: 0,
       perPage: 10
     };
   },
   methods: {
-    changeSort(col: number) {
-      if (this.sortCol === col) {
+    changeSort(key: string) {
+      if (this.sortKey === key) {
         if (this.sortUp) {
           this.sortUp = false;
-          this.sortCol = -1;
+          this.sortKey = "";
         } else {
           this.sortUp = true;
         }
       } else {
-        this.sortCol = col;
+        this.sortKey = key;
         this.sortUp = false;
       }
     },
     prevPage() {
-      this.startRow -= this.perPage;
-      if (this.startRow < 0) this.startRow = 0;
+      if (this.canPrev) this.startRow -= this.perPage;
     },
     nextPage() {
-      this.startRow += this.perPage;
-      if (this.startRow >= (this.rows || []).length - 1)
-        this.startRow = (this.rows || []).length - 1;
+      if (this.canNext) this.startRow += this.perPage;
     }
   },
   computed: {
-    _rows: function(): Row[] {
+    _rows(): Row[] {
       let rows = [...((this.rows || []) as Row[])];
+      rows = rows.map((row, index) => ({ ...row, originalIndex: index }));
 
       const func = (a: Row, b: Row) => {
-        const valA = a[this.sortCol] || 0;
-        const valB = b[this.sortCol] || 0;
+        const valA = a[this.sortKey] || 0;
+        const valB = b[this.sortKey] || 0;
         if (valA < valB === this.sortUp) return 1;
         else if (valA > valB === this.sortUp) return -1;
         else return 0;
       };
 
-      if (this.sortCol >= 0) rows.sort(func);
+      if (this.sortKey) rows.sort(func);
 
       rows = rows.slice(this.startRow, this.startRow + this.perPage);
 
       return rows;
+    },
+    canPrev(): boolean {
+      return this.startRow - this.perPage >= 0;
+    },
+    canNext(): boolean {
+      return this.startRow + this.perPage <= (this.rows || []).length - 1;
+    },
+    endRow(): number {
+      return Math.min(this.startRow + this.perPage, (this.rows || []).length);
+    }
+  },
+  watch: {
+    rows: {
+      handler(oldRows, newRows) {
+        if (this.startRow >= newRows.length) this.startRow -= this.perPage;
+        if (this.startRow < 0) this.startRow = 0;
+      },
+      deep: true
     }
   }
 });
@@ -128,11 +171,12 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .table {
-  max-width: 100%;
+  width: 100%;
   margin: 20px 0;
   overflow-x: auto;
 
   table {
+    width: 100%;
     border-collapse: collapse;
   }
 

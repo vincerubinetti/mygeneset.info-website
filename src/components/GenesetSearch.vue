@@ -1,7 +1,7 @@
 <template>
   <div class="geneset_search">
-    <Center :vertical="true">
-      <TextBox placeholder="Search genesets by keywords" v-model="keywords" />
+    <Center :vertical="true" width="100%">
+      <TextBox :placeholder="placeholder" v-model="keywords" />
       <div v-if="expanded" class="geneset_species">
         <label v-for="(value, name, index) in species" :key="index">
           <input type="checkbox" v-model="value.selected" />
@@ -27,7 +27,7 @@ import Clickable from "@/components/Clickable.vue";
 
 // dummy species. to be replaced by api call
 const species = [
-  { name: "Humans", species: "Homo sapiens", selected: true },
+  { name: "Human", species: "Homo sapiens", selected: true },
   {
     name: "Brewer's Yeast",
     species: "Saccharomyces cerevisiae",
@@ -48,6 +48,9 @@ export default defineComponent({
     Center,
     Clickable
   },
+  props: {
+    placeholder: String
+  },
   data() {
     return {
       expanded: false,
@@ -61,7 +64,6 @@ export default defineComponent({
 <style scoped lang="scss">
 .geneset_search {
   margin: 0 auto;
-  max-width: 600px;
 
   .geneset_species {
     label {

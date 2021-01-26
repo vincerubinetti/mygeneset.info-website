@@ -1,33 +1,8 @@
 <template>
   <Header />
-  <Main>
-    <Section>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </Section>
-    <Section>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </Section>
-    <Section>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-      commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-      cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-      est laborum.
-    </Section>
+  <Main title="Build" icon="fas fa-cube">
+    <YourGenesets />
+    <BuildNew />
   </Main>
   <Footer />
 </template>
@@ -36,15 +11,17 @@
 import { defineComponent } from "vue";
 import Header from "@/components/Header.vue";
 import Main from "@/components/Main.vue";
-import Section from "@/components/Section.vue";
 import Footer from "@/components/Footer.vue";
+import YourGenesets from "./build/YourGenesets.vue";
+import BuildNew from "./build/BuildNew.vue";
 
 export default defineComponent({
   components: {
     Header,
     Main,
-    Section,
-    Footer
+    Footer,
+    YourGenesets,
+    BuildNew
   }
 });
 </script>
