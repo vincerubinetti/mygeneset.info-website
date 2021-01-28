@@ -1,6 +1,7 @@
 {
-  "name": "mygeneset.info",
+  "name": "mygeneset.info-website",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -40,6 +41,7 @@
     "prettier": "^1.19.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "style-resources-loader": "^1.4.1",
     "typescript": "~3.9.3"
   }
 }

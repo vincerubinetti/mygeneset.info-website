@@ -1,5 +1,3 @@
-# mygeneset.info
-
 ## Project setup
 ```
 yarn install
