@@ -107,6 +107,12 @@ textarea:not(:focus) {
   resize: none;
 }
 
+// placeholder for inputs/textareas/etc
+::placeholder {
+  opacity: 1;
+  color: $gray;
+}
+
 // select
 select {
   border: none;
@@ -136,6 +142,28 @@ i + span {
 h1 {
   i + span {
     margin-left: 15px;
+  }
+}
+
+// tooltip
+.tooltip {
+  position: absolute;
+  left: -999px;
+  top: -999px;
+  width: max-content;
+  max-width: 260px;
+  padding: 8px 12px;
+  background: $black;
+  color: $white;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity $fast;
+
+  &[data-show="true"] {
+    opacity: 1;
   }
 }
 </style>
