@@ -99,7 +99,7 @@ export default defineComponent({
 .species_icon {
   width: 15px;
   height: 15px;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .multiselect {
@@ -153,10 +153,10 @@ export default defineComponent({
       .multiselect-tag {
         display: flex;
         align-items: center;
-        min-height: 30px;
         margin: 5px;
-        padding: 5px 10px;
+        padding: 3px 8px;
         border-radius: 5px;
+        font-size: 0.9rem;
         background: $theme-pale;
 
         .fa-times {
