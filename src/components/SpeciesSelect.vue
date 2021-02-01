@@ -93,7 +93,7 @@ export default defineComponent({
 
 <style lang="scss">
 @mixin height {
-  min-height: 40px;
+  min-height: 40px - 2px - 2px;
 }
 
 .species_icon {
