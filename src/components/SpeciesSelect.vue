@@ -1,99 +1,75 @@
 <template>
   <Multiselect
     v-model="value"
-    :options="options"
+    :options="search"
     mode="tags"
-    :placeholder="placeholder"
     :searchable="true"
+    trackBy="full"
+    :placeholder="placeholder"
     valueProp="key"
-    trackBy="label"
+    :caret="false"
+    :limit="100"
+    :delay="300"
+    noOptionsText="No results"
+    noResultsText="No results"
+    @open="refresh"
+    ref="multiselect"
   >
-    <template v-slot:tag="{ option, remove, disabled }">
+    <template v-slot:tag="{ option, handleTagRemove, disabled }">
       <button
         class="multiselect-tag is-user"
         @click.prevent
-        @mousedown.prevent.stop="remove(option)"
+        @mousedown.prevent.stop="handleTagRemove(option, $event)"
         :disabled="disabled"
+        v-tooltip.slow="option.full"
       >
-        <img :src="option.icon" class="species_icon" />
-        <span>{{ option.label }}</span>
+        <img v-if="option.icon" :src="option.icon" class="icon" />
+        <span v-if="option.scientific || option.common" class="name">
+          <span v-if="option.scientific" class="scientific">{{
+            option.scientific
+          }}</span>
+          <span v-if="option.common" class="common">{{ option.common }}</span>
+        </span>
         <i class="fas fa-times"></i>
       </button>
     </template>
     <template v-slot:option="{ option }">
-      <img :src="option.icon" class="species_icon" />
-      <span>{{ option.label }}</span>
+      <img v-if="option.icon" :src="option.icon" class="icon" />
+      <span
+        v-if="option.scientific || option.common"
+        class="name"
+        v-tooltip.slow="option.full"
+      >
+        <span v-if="option.scientific" class="scientific">{{
+          option.scientific
+        }}</span>
+        <span v-if="option.common" class="common">{{ option.common }}</span>
+      </span>
     </template>
   </Multiselect>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import Multiselect from "@vueform/multiselect";
+import { search } from "@/api/species";
+import { top as getTop } from "@/api/species";
+import { Json } from "@/api";
 
-import human from "@/assets/species/human.svg";
-import brewersYeast from "@/assets/species/brewers-yeast.svg";
-import houseMouse from "@/assets/species/house-mouse.svg";
-import brownRat from "@/assets/species/brown-rat.svg";
-import roundworm from "@/assets/species/roundworm.svg";
-import thaleCress from "@/assets/species/thale-cress.svg";
-import fruitFly from "@/assets/species/fruit-fly.svg";
-import zebrafish from "@/assets/species/zebrafish.svg";
-import pseudomonas from "@/assets/species/pseudomonas.svg";
+interface MultiselectType {
+  refreshOptions: Function;
+}
 
-// dummy species. to be replaced by api call
-let species = [
-  { name: "Human", key: "human", scientific: "Homo sapiens", icon: human },
-  {
-    name: "Brewer's Yeast",
-    key: "brewers-yeast",
-    scientific: "Saccharomyces cerevisiae",
-    icon: brewersYeast
-  },
-  {
-    name: "House Mouse",
-    key: "mouse",
-    scientific: "Mus musculus",
-    icon: houseMouse
-  },
-  {
-    name: "Brown Rat",
-    key: "rat",
-    scientific: "Rattus norvegicus",
-    icon: brownRat
-  },
-  {
-    name: "Roundworm",
-    key: "worm",
-    scientific: "Caenorhabditis elegans",
-    icon: roundworm
-  },
-  {
-    name: "Thale Cress",
-    key: "thale-cress",
-    scientific: "Arabidopsis thaliana",
-    icon: thaleCress
-  },
-  {
-    name: "Fruit Fly",
-    key: "fruitfly",
-    scientific: "Drosophila melanogaster",
-    icon: fruitFly
-  },
-  {
-    name: "Zebrafish",
-    key: "zebrafish",
-    scientific: "Danio rerio",
-    icon: zebrafish
-  },
-  {
-    name: "Pseudomonas",
-    key: "pseudomonas-aeruginosa",
-    scientific: "Pseudomonas aeruginosa",
-    icon: pseudomonas
-  }
-];
-species = species.map(s => ({ ...s, label: `${s.name} (${s.scientific})` }));
+const context = require.context("@/assets/species", false, /\.svg$/);
+const icons = context.keys().map(context) as string[];
+const findIcon = (name: string) => {
+  const pattern = new RegExp(`${name}\\.[A-Za-z0-9]*\\.svg`);
+  return icons.find((icon: string) => icon.match(pattern));
+};
+
+let top: Json = [];
+const setTop = async () => (top = await getTop());
+setTop();
 
 export default defineComponent({
   props: {
@@ -104,28 +80,67 @@ export default defineComponent({
   },
   data() {
     return {
-      value: null,
-      options: species
+      value: null
     };
+  },
+  methods: {
+    async search(query: string) {
+      let results;
+      if (query) results = await search(query);
+      else results = top || [];
+
+      const formatResult = (results: Json) => {
+        const key: string = results._id;
+        const scientific: string = results.scientific_name;
+        const common: string = [
+          results.genbank_common_name,
+          results.common_name,
+          results.other_names
+        ]
+          .flat()
+          .filter(name => name)
+          .join(", ");
+        const full = [key, scientific, common].join(" - ");
+        const icon = findIcon(scientific);
+        return { key, scientific, common, full, icon };
+      };
+      results = results.map(formatResult);
+      return results;
+    },
+    refresh() {
+      (this.$refs.multiselect as MultiselectType)?.refreshOptions();
+    }
   }
 });
 </script>
 
-<style lang="scss">
-@mixin height {
-  min-height: 40px - 2px - 2px;
-}
+<style scope lang="scss">
+$height: 40px - 2px - 2px;
 
-.species_icon {
+.icon {
   width: 15px;
   height: 15px;
-  margin-right: 8px;
+}
+
+.name {
+  flex-grow: 1;
+  @include truncate;
+
+  .scientific {
+    font-weight: $medium;
+  }
+
+  .common {
+    color: $gray;
+    font-size: 0.8em;
+    font-style: italic;
+  }
 }
 
 .multiselect {
   position: relative;
   width: 100%;
-  @include height;
+  min-height: $height;
 
   &.is-open {
     .multiselect-input {
@@ -139,7 +154,7 @@ export default defineComponent({
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    @include height;
+    min-height: $height;
     background: $white;
     border: solid $light-gray 2px;
     border-radius: 5px;
@@ -153,12 +168,13 @@ export default defineComponent({
     .multiselect-placeholder {
       position: absolute;
       width: 100%;
-      @include height;
+      min-height: $height;
       display: flex;
       justify-content: flex-start;
       align-items: center;
       padding: 0 10px;
       color: $gray;
+      @include truncate;
     }
 
     .multiselect-tags {
@@ -167,17 +183,26 @@ export default defineComponent({
       align-items: center;
       flex-wrap: wrap;
       width: 100%;
-      @include height;
+      min-height: $height;
       z-index: 1;
 
       .multiselect-tag {
         display: flex;
         align-items: center;
+        max-width: 200px;
         margin: 5px;
         padding: 3px 8px;
         border-radius: 5px;
         font-size: 0.9rem;
         background: $theme-pale;
+
+        .icon {
+          margin-right: 5px;
+        }
+
+        .common {
+          margin-left: 5px;
+        }
 
         .fa-times {
           margin-left: 10px;
@@ -187,11 +212,11 @@ export default defineComponent({
       .multiselect-search {
         flex-grow: 1;
         min-width: 40px;
-        @include height;
+        min-height: $height;
 
         input {
           width: 100% !important;
-          @include height;
+          min-height: $height;
           padding: 0 10px;
           outline: none;
         }
@@ -203,11 +228,12 @@ export default defineComponent({
     position: absolute;
     left: 0;
     right: 0;
+    width: 100%;
+    max-width: 100%;
     border: solid $light-gray 2px;
     border-top: none;
     border-radius: 0 0 5px 5px;
-    max-height: 200px;
-    overflow-x: auto;
+    max-height: 200px !important;
     overflow-y: auto;
     z-index: 100;
     background: $white;
@@ -216,11 +242,21 @@ export default defineComponent({
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      @include height;
+      width: 100%;
+      min-height: $height;
       padding: 0 10px;
       color: $black;
+      font-size: 1rem;
       text-decoration: none;
-      white-space: nowrap;
+      text-align: left;
+
+      .icon {
+        margin-right: 10px;
+      }
+
+      .common {
+        margin-left: 10px;
+      }
 
       &.is-pointed {
         background: $theme-pale;
@@ -232,7 +268,7 @@ export default defineComponent({
       display: flex;
       justify-content: center;
       align-items: center;
-      @include height;
+      min-height: $height;
     }
   }
 }

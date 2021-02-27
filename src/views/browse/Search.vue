@@ -22,7 +22,7 @@ import Center from "@/components/Center.vue";
 import Table from "@/components/Table.vue";
 import TextBox from "@/components/TextBox.vue";
 import SpeciesSelect from "@/components/SpeciesSelect.vue";
-import { search } from "@/api/mygenset";
+import { search } from "@/api/genesets";
 import { Json } from "@/api/index";
 
 const cols = [
@@ -41,14 +41,7 @@ const cols = [
   {
     key: "genes",
     name: "Genes",
-    align: "left",
-    format: (cell: Json) => {
-      let list = cell
-        .map((gene: Json) => gene.name || gene.uniprot || gene.ensemblgeme)
-        .join(", ");
-      if (list.length > 100) list = list.slice(0, 100) + "...";
-      return list;
-    }
+    align: "left"
   }
 ];
 
@@ -90,3 +83,10 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scope lang="scss">
+td {
+  max-width: 1000px;
+  @include truncate;
+}
+</style>
