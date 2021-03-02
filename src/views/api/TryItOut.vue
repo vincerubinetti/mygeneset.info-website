@@ -9,14 +9,17 @@
         :text="key"
         :selected="selected === key"
         design="plain"
+        v-tooltip="request.tooltip"
       />
     </Center>
     <CodeBlock ref="codeBlock" :ariaLabel="code">
+      <span>{{ method }}</span>
+      <span>&nbsp;</span>
       <span>{{ base }}</span>
       <span>{{ path }}</span>
       <template
         v-for="({ name, example, tooltip }, index) in fields"
-        :key="name"
+        :key="selected + index"
       >
         <span v-if="name" v-tooltip="tooltip">{{ name }}</span>
         <span v-if="name">=</span>
@@ -34,6 +37,15 @@
         <span v-if="index < fields.length - 1">&</span>
       </template>
     </CodeBlock>
+    <Center>
+      <i>
+        Most fields support
+        <a
+          href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html"
+          >standard Elasticsearch query syntax</a
+        >, like <code>*</code> for wildcards
+      </i>
+    </Center>
     <Center width="150px">
       <CopyButton :text="this.code" subject="request" />
       <Clickable
@@ -85,8 +97,10 @@ interface Field {
 }
 
 interface Request {
+  method: string;
   path: string;
   fields?: Field[];
+  tooltip: string;
 }
 
 interface Requests {
@@ -100,36 +114,73 @@ interface CodeBlockInterface {
 const base = "https://mygeneset.info/v1/";
 
 const requests: Requests = {
+  "Get fields": {
+    method: "GET",
+    path: "metadata/fields",
+    tooltip: "A list of all available fields in mygeneset.info"
+  },
   "Get metadata": {
-    path: "metadata/"
+    method: "GET",
+    path: "metadata/",
+    tooltip: "Various info about the mygeneset.info database itself"
   },
   "Lookup by id": {
+    method: "GET",
     path: "geneset/",
     fields: [
       { name: "", example: "WP661", tooltip: "mygenset.info id of geneset" }
-    ]
+    ],
+    tooltip:
+      "How to lookup the info of a geneset when you know its mygenset.info id"
   },
   "Search by keyword": {
+    method: "GET",
     path: "query/?",
     fields: [
       {
         name: "q",
         example: "glucose",
-        tooltip:
-          "Search term to exact-match. Accepts any Elasticsearch query syntax, e.g. * for wildcard."
+        tooltip: "What to search for"
       },
       {
         name: "fields",
-        example: "genes.name",
-        tooltip:
-          "Fields to return from each geneset. Accepts any Elasticsearch query syntax, e.g. * for wildcard."
+        example: "taxid,genes.name",
+        tooltip: "A list of fields to return from each geneset"
       },
       {
         name: "size",
         example: "10",
         tooltip: "How many results to return"
       }
-    ]
+    ],
+    tooltip: "How to search for gensets by keywords"
+  },
+  "Batch search": {
+    method: "POST",
+    path: "query/?",
+    fields: [
+      {
+        name: "q",
+        example: "P13671,P00813,Q01740",
+        tooltip: "A list of separate searches"
+      },
+      {
+        name: "scopes",
+        example: "taxid,genes.uniprot",
+        tooltip: "A list of fields to search"
+      },
+      {
+        name: "fields",
+        example: "taxid,genes.name",
+        tooltip: "A list of fields to return from each geneset"
+      },
+      {
+        name: "size",
+        example: "1",
+        tooltip: "How many results to return (in this case, per search)"
+      }
+    ],
+    tooltip: "How to search for a list of genesets"
   }
 };
 
@@ -165,11 +216,15 @@ export default defineComponent({
     },
     run: async function() {
       this.loading = true;
+
+      const code = this.code.replace(this.method, "").trim();
+
       try {
-        this.response = (await request(this.code)) as {};
+        this.response = (await request(code, this.method)) as {};
       } catch (error) {
         console.error(error);
       }
+
       this.loading = false;
     },
     download() {
@@ -177,6 +232,9 @@ export default defineComponent({
     }
   },
   computed: {
+    method(): string {
+      return this.requests[this.selected].method;
+    },
     empty(): boolean {
       return Object.keys(this.response).length === 0;
     },

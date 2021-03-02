@@ -72,6 +72,20 @@ a:hover {
   color: $black;
 }
 
+// code block
+code {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: $off-black;
+
+  &,
+  * {
+    color: $white;
+    font-family: $mono;
+    font-style: normal;
+  }
+}
+
 // buttons
 button {
   display: inline-flex;
@@ -137,12 +151,7 @@ hr {
 
 // font awesome icons
 i + span {
-  margin-left: 10px;
-}
-h1 {
-  i + span {
-    margin-left: 15px;
-  }
+  margin-left: 0.75em;
 }
 
 // tooltip
