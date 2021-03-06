@@ -1,10 +1,10 @@
 <template>
   <Section>
     <h2 id="api">API</h2>
-    <Center>Use My Geneset programatically</Center>
+    <Center>Use MyGeneset programatically</Center>
     <Placeholder>
       table of popular/recent queries with columns:<br />
-      request type (post/get), response status, parameters, country?
+      request, parameters, country, time took
     </Placeholder>
     <Center width="200px">
       <Clickable to="/api" icon="fas fa-terminal" text="Try Now" design="big" />

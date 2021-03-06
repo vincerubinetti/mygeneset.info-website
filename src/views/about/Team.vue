@@ -2,7 +2,7 @@
   <Section>
     <h2 id="team">Team</h2>
     <p>
-      My Geneset was made by the
+      MyGeneset was made by the
       <LinkTo to="https://biothings.io/">BioThings collaboration</LinkTo>, a
       cross-organization group that builds
       <LinkTo to="https://www.go-fair.org/fair-principles/">FAIR</LinkTo> tools
@@ -11,40 +11,40 @@
     </p>
     <Gallery>
       <Portrait
-        link="https://vincentrubinetti.com"
-        :image="vince"
-        name="Vincent Rubinetti"
-        role="Frontend Developer"
+        name="Chunlei Wu"
+        role="Principal Investigator"
+        link="https://wulab.io/the-team-chunlei-wu"
+        :image="chunlei"
       />
       <Portrait
-        link="https://vincentrubinetti.com"
-        :image="vince"
-        name="Vincent Rubinetti"
-        role="Frontend Developer"
+        name="Casey Greene"
+        role="Principal Investigator"
+        link="https://greenelab.com/members/casey-greene.html"
+        :image="casey"
       />
       <Portrait
-        link="https://vincentrubinetti.com"
-        :image="vince"
-        name="Vincent Rubinetti"
-        role="Frontend Developer"
+        name="Ricardo Avila"
+        role="Research Programmer"
+        link="https://wulab.io/the-team-ricardo-avila"
+        :image="ricardo"
       />
       <Portrait
-        link="https://vincentrubinetti.com"
-        :image="vince"
-        name="Vincent Rubinetti"
-        role="Frontend Developer"
+        name="Dongbo Hu"
+        role="Backend Developer"
+        link="https://github.com/dongbohu"
+        :image="dongbo"
       />
       <Portrait
-        link="https://vincentrubinetti.com"
-        :image="vince"
-        name="Vincent Rubinetti"
-        role="Frontend Developer"
+        name="Xinghua (Jerry) Zhou"
+        role="Research Programmer"
+        link="https://wulab.io/the-team-jerry-zhou"
+        :image="jerry"
       />
       <Portrait
-        link="https://vincentrubinetti.com"
-        :image="vince"
         name="Vincent Rubinetti"
         role="Frontend Developer"
+        link="https://greenelab.com/members/vincent-rubinetti.html"
+        :image="vince"
       />
     </Gallery>
   </Section>
@@ -57,6 +57,11 @@ import LinkTo from "@/components/LinkTo.vue";
 import Gallery from "@/components/Gallery.vue";
 import Portrait from "@/components/Portrait.vue";
 
+import chunlei from "@/assets/team/chunlei.jpg";
+import casey from "@/assets/team/casey.jpg";
+import ricardo from "@/assets/team/ricardo.jpg";
+import dongbo from "@/assets/team/dongbo.jpg";
+import jerry from "@/assets/team/jerry.jpg";
 import vince from "@/assets/team/vince.jpg";
 
 export default defineComponent({
@@ -68,6 +73,11 @@ export default defineComponent({
   },
   data() {
     return {
+      chunlei,
+      casey,
+      ricardo,
+      dongbo,
+      jerry,
       vince
     };
   }

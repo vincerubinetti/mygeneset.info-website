@@ -50,7 +50,7 @@ h3 {
 }
 h4 {
   text-align: left;
-  font-weight: $regular;
+  font-weight: $medium;
   font-size: 1.1rem;
   margin: 20px 0;
   @include trim-v-margins;
@@ -139,6 +139,18 @@ select {
 // label
 label {
   cursor: pointer;
+}
+
+// list
+ul {
+  margin: 20px 0;
+  line-height: 1.7;
+  text-align: justify;
+  padding-left: 30px;
+  list-style-type: square;
+}
+li {
+  padding-left: 10px;
 }
 
 // horizontal rule

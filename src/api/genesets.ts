@@ -1,18 +1,24 @@
 import { request } from ".";
-import { Response } from ".";
 import { mygeneset } from ".";
+import { Geneset } from "@/api/types";
 
-export const lookup = async (id: string): Response => {
+// look up geneset from id
+export const lookup = async (id: string): Promise<Geneset> => {
   const url = mygeneset + "geneset/" + id;
-  return await request(url);
+  try {
+    return await request(url);
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 };
 
-export const metadata = async (): Response => {
-  const url = mygeneset + "metadata";
-  return await request(url);
-};
-
-export const search = async (query?: string, species?: string[]): Response => {
+// search genesets by keyword
+export const search = async (
+  query?: string,
+  species?: string[]
+): Promise<Geneset[]> => {
+  // params
   const params = new URLSearchParams();
   if (query) {
     query = ` ${query} `.split(/\s+/g).join("*"); // pseudo fuzzy search
@@ -21,8 +27,15 @@ export const search = async (query?: string, species?: string[]): Response => {
   if (species?.length) params.set("species", species.join(","));
   params.set("fields", "*");
   params.set("size", "100");
+
+  // request and parse results
   const url = mygeneset + "query?" + params.toString();
-  const { total = 0, hits = [] } = await request(url);
-  if (hits.length) hits[0].total = total;
-  return hits;
+  try {
+    const { total = 0, hits = [] } = await request(url);
+    if (hits.length) hits[0].total = total;
+    return hits;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
