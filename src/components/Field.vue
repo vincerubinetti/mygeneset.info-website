@@ -7,17 +7,14 @@
       <i v-if="!disabled" class="fas fa-pencil-alt"></i>
     </div>
 
-    <!-- dropdown menu -->
-    <select
-      v-if="options && options.length"
-      :value="modelValue"
+    <!-- checkbox -->
+    <input
+      v-if="type === 'checkbox'"
+      :checked="modelValue ? true : false"
       @input="onInput"
+      type="checkbox"
       :disabled="disabled"
-    >
-      <option v-for="(option, index) in options" :key="index">
-        {{ option }}
-      </option>
-    </select>
+    />
 
     <!-- text box -->
     <textarea
@@ -42,10 +39,10 @@ export default defineComponent({
     placeholder: String,
     // is field editable
     disabled: Boolean,
-    // array of string options for dropdown menu
-    options: Array,
+    // field type, "" | "checkbox"
+    type: String,
     // field value internal state
-    modelValue: String
+    modelValue: [String, Boolean]
   },
   mounted() {
     const textarea = this.$refs.textarea as HTMLInputElement;
@@ -71,7 +68,8 @@ export default defineComponent({
     // when value changes
     onInput(event: Event) {
       const input = event.target as HTMLInputElement;
-      this.$emit("update:modelValue", input.value);
+      const value = this.type === "checkbox" ? input.checked : input.value;
+      this.$emit("update:modelValue", value);
       if (input.tagName.toLowerCase() === "textarea") this.fitHeight(input);
     }
   }
@@ -96,9 +94,33 @@ export default defineComponent({
     padding: 5px 5px;
   }
 
-  select {
-    margin: 0 -5px;
-    padding: 5px 5px;
+  input {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    padding: 0;
+    border-radius: 5px;
+    background: none;
+    color: transparent;
+    border: solid 2px $theme;
+    cursor: pointer;
+
+    &:after {
+      content: "\f00c";
+      position: absolute;
+      font-family: "Font Awesome 5 Free";
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    &:checked {
+      background: $theme;
+      color: $white;
+    }
   }
 
   i {

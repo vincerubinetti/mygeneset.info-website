@@ -14,7 +14,7 @@
               <!-- sort button -->
               <button
                 v-if="col.sortable !== false && !col.action"
-                :align="col.align || 'center'"
+                :align="col.align || 'left'"
                 @click="changeSort(col.name)"
               >
                 {{ col.name }}
@@ -26,7 +26,7 @@
               </button>
 
               <!-- raw value -->
-              <div v-else :align="col.align || 'center'">
+              <div v-else :align="col.align || 'left'">
                 {{ col.name }}
               </div>
             </th>
@@ -38,18 +38,17 @@
           <tr v-for="(row, rowIndex) in _rows" :key="rowIndex">
             <template v-for="(col, colIndex) in cols" :key="colIndex">
               <!-- action button -->
-              <td v-if="col.action" :align="col.align || 'center'">
+              <td v-if="col.button" :align="col.align || 'left'">
                 <Clickable
-                  :title="col.action"
-                  :icon="col.icon"
+                  v-tooltip="col.button.tooltip(row[col.key], row, col)"
+                  :icon="col.button.icon(row[col.key], row, col)"
                   @click="
-                    $emit('action', {
-                      rowIndex,
-                      colIndex,
-                      originalIndex: row.originalIndex,
+                    $emit(
+                      col.button.action(row[col.key], row, col),
+                      row[col.key],
                       row,
-                      cell: row[col.key]
-                    })
+                      col
+                    )
                   "
                   design="plain"
                 />
@@ -58,12 +57,12 @@
               <!-- custom html -->
               <td
                 v-else-if="col.format"
-                :align="col.align || 'center'"
-                v-html="col.format(row[col.key])"
+                :align="col.align || 'left'"
+                v-html="col.format(row[col.key], row, col)"
               ></td>
 
               <!-- raw value -->
-              <td v-else :align="col.align || 'center'">
+              <td v-else :align="col.align || 'left'">
                 {{ row[col.key] }}
               </td>
             </template>
@@ -112,11 +111,20 @@ export interface Col {
   align?: string;
   // is col sortable
   sortable?: boolean;
-  // action to emit when clicking on cell in col
-  action?: string;
-  // icon to show in button for action
-  icon?: string;
+  // action button in cell
+  button?: {
+    // what vue action to emit
+    // gets (cell, row, col), return string
+    action?: Function;
+    // what font awesome icon code to use for button
+    // gets (cell, row, col), return string
+    icon?: Function;
+    // button tooltip text
+    // gets (cell, row, col), return string
+    tooltip?: Function;
+  };
   // how to format cell
+  // gets (cell, row, col), return html string
   format?: Function;
 }
 
@@ -132,7 +140,7 @@ export default defineComponent({
     // rows of data
     rows: Array
   },
-  emits: ["action"],
+  emits: ["add", "remove"],
   components: {
     Center,
     Clickable
@@ -181,9 +189,8 @@ export default defineComponent({
         (((this.cols as []).find((col: Col) => col.name === this.sortCol) ||
           {}) as Col)?.key || "";
 
-      // copy row data and track original indices for performing actions on rows
+      // copy row data
       let rows = [...((this.rows || []) as Row[])];
-      rows = rows.map((row, index) => ({ ...row, originalIndex: index }));
 
       // sort
       if (sortKey)
@@ -216,8 +223,8 @@ export default defineComponent({
   watch: {
     // when table row data changes, go to first page
     rows: {
-      handler() {
-        this.startRow = 0;
+      handler(newRows, oldRows) {
+        if (newRows.length !== oldRows.length) this.startRow = 0;
       },
       deep: true
     }

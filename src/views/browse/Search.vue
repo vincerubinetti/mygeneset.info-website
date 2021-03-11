@@ -33,27 +33,25 @@ const cols = [
   {
     key: "_id",
     name: "Name",
-    align: "left",
     format: (cell: Geneset["_id"]) => `<a href="/geneset/${cell}">${cell}</a>`
   },
   {
     key: "genes",
     name: "# of Genes",
     align: "center",
-    format: (cell: Geneset["genes"]) => (Array.isArray(cell) ? cell.length : 1)
+    format: (cell: Geneset["genes"]) => cell?.length || 0
   },
   {
     key: "genes",
     name: "Genes",
-    align: "left",
     format: (cell: Geneset["genes"]) =>
-      [cell]
-        .flat()
+      (cell || [])
         .map(
           gene =>
             gene?.name ||
-            [gene?.ensemblgene].flat()[0] ||
-            [gene?.mygene_id].flat()[0] ||
+            (gene?.symbol || [])[0] ||
+            (gene?.ensemblgene || [])[0] ||
+            gene?.mygene_id ||
             ""
         )
         .filter(gene => gene)

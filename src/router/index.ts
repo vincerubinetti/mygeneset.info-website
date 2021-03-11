@@ -11,17 +11,16 @@ import Build from "@/views/Build.vue";
 import API from "@/views/API.vue";
 import About from "@/views/About.vue";
 import LogIn from "@/views/LogIn.vue";
-import New from "@/views/New.vue";
 import Geneset from "@/views/Geneset.vue";
 import User from "@/views/User.vue";
-import { scrollToHash } from "@/util/url.ts";
+import { scrollToHash } from "@/util/url";
 
 // handle redirect from 404
 const handleRedirect: NavigationGuard = (to, from, next) => {
   // check for redirect storage flag
   const redirect = sessionStorage.redirect;
   if (redirect) {
-    console.log({ redirect });
+    console.info({ redirect });
     // route to redirect location instead
     next(redirect);
     // remove redirect storage flag
@@ -67,8 +66,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/new",
-    name: "New",
-    component: New
+    name: "New Geneset",
+    component: Geneset
   },
   {
     path: "/geneset/:id",
