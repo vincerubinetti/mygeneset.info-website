@@ -7,13 +7,17 @@
     </h2>
     <Center :vertical="true" width="100%">
       <TextBox
-        :placeholder="`Search genes by keyword`"
+        :multi="true"
         v-model="keywords"
         v-debounce="search"
+        :placeholder="
+          expanded ? 'Search list of genes' : 'Search genes by keyword'
+        "
+        @expand="expand"
       />
       <SpeciesSelect
-        :placeholder="`Search genes by species`"
         v-model="species"
+        :placeholder="'Search genes by species'"
       />
     </Center>
     <Table :cols="cols" :rows="_results" @add="add" @remove="remove">
@@ -31,6 +35,7 @@ import Center from "@/components/Center.vue";
 import TextBox from "@/components/TextBox.vue";
 import SpeciesSelect from "@/components/SpeciesSelect.vue";
 import { search } from "@/api/genes";
+import { batchSearch } from "@/api/genes";
 import { Geneset } from "@/api/types";
 import { Gene } from "@/api/types";
 
@@ -52,6 +57,7 @@ const cols = [
     sortable: false
   },
   { key: "name", name: "Name" },
+  { key: "alias", name: "Aliases", format },
   { key: "symbol", name: "Symbol", format },
   { key: "ncbigene", name: "Entrez" },
   { key: "ensemblgene", name: "Ensembl", format },
@@ -83,17 +89,28 @@ export default defineComponent({
       // table columns
       cols,
       // search results
-      results: [] as Gene[]
+      results: [] as Gene[],
+      // is multi-line search expanded
+      expanded: false
     };
   },
   methods: {
     // search genes
     async search() {
       try {
-        this.results = await search(this.keywords, this.species);
+        if (this.expanded)
+          this.results = await batchSearch(
+            this.keywords.split("\n"),
+            this.species
+          );
+        else this.results = await search(this.keywords, this.species);
       } catch (error) {
         console.error(error);
       }
+    },
+    // update local expanded state
+    expand(newExpanded: boolean) {
+      this.expanded = newExpanded;
     }
   },
   computed: {
@@ -121,6 +138,10 @@ export default defineComponent({
   watch: {
     // update search when selected species change
     species() {
+      this.search();
+    },
+    // update search when expanded changes
+    expanded() {
       this.search();
     }
   },

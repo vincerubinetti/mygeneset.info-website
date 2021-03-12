@@ -33,10 +33,12 @@ export interface Gene {
   // from api
   mygene_id?: string;
   name?: string;
+  alias?: string[];
   symbol?: string[];
   ncbigene?: string;
   ensemblgene?: string[];
   uniprot?: string[];
+  notfound?: boolean;
 
   // from app
   total?: number;
@@ -48,11 +50,13 @@ export interface MyGene {
   // from api
   _id?: string;
   name?: string;
+  alias?: string[];
   symbol?: string[];
   ncbigene?: string;
   ensembl?: { gene?: string }[];
   entrezgene?: string;
   uniprot?: { "Swiss-Prot": string }[];
+  notfound?: boolean;
 
   // from app
   total?: number;
@@ -64,10 +68,12 @@ export const mapGene = (myGene: MyGene): Gene => ({
   // eslint-disable-next-line
   mygene_id: myGene._id,
   name: myGene.name,
+  alias: myGene.alias,
   symbol: myGene.symbol,
   ncbigene: myGene.entrezgene,
   ensemblgene: (myGene.ensembl || []).map(e => e.gene || ""),
   uniprot: (myGene.uniprot || []).map(u => (u || {})["Swiss-Prot"] || ""),
+  notfound: myGene.notfound,
 
   // from app
   total: myGene.total
