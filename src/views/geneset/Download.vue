@@ -97,7 +97,7 @@ export default defineComponent({
   data() {
     return {
       // options expanded state
-      expanded: true,
+      expanded: false,
       // list of gene identifiers
       identifiers,
       // file formats
